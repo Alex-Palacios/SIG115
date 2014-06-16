@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+    
+    
+    <ui:composition template="/resources/templates/template.xhtml">
+        
+        
+        <ui:define name="title">TACTICO</ui:define>
+        
+        <ui:define name="contenido">
+            REPORTE #2 : <br/><br/>
+            <h:form>
+                <p:outputLabel value="Del:" /><p:calendar value="#{reporte2Controller.fechaInicio}"  mode="popup" showOn="button" readonlyInput="true" effect="slideDown" 
+                                                          pattern="dd/MM/yyyy" required="true" requiredMessage="Ingrese Fecha Inicio" navigator="true" />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                
+                <p:outputLabel value="Al:" /><p:calendar value="#{reporte2Controller.fechaFin}"  mode="popup" showOn="button" readonlyInput="true" effect="slideDown" 
+                                                          pattern="dd/MM/yyyy" required="true" requiredMessage="Ingrese Fecha Fin" navigator="true" />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p:commandButton value="GENERAR REPORTE" actionListener="#{reporte2Controller.generarReporte2}" update=":msg,reporte2" />
+            <br/><br/>
+            <p:fieldset style="text-align: right">
+                    <h:commandLink> 
+                       <p:graphicImage library="iconos" name="excel.png" title="Exportar a Excel" />  
+                       <p:dataExporter type="xls" target="reporte2" fileName="Ventas_por_Vendedor" />  
+                    </h:commandLink> 
+                    <h:commandLink>  
+                       <p:graphicImage library="iconos" name="pdf.png" title="Exportar en PDF"/>  
+                       <p:dataExporter type="pdf" target="reporte2" fileName="Ventas_por_Vendedor" />  
+                    </h:commandLink>
+             </p:fieldset>
+            
+            <p:dataTable id="reporte2" value="#{reporte2Controller.itemsVV}" filteredValue="#{reporte2Controller.filtroVV}" 
+                         var="item" emptyMessage="NO HAY DATOS" style="text-align: center;" >
+                <f:facet name="header"> #{bundle.reporte_2} </f:facet>
+ 
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column rowspan="3" headerText="Vendedor" />
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2" headerText="Ventas Al Credito" />
+                        <p:column colspan="2" headerText="Ventas Al Contado" />
+                        <p:column colspan="2" headerText="Total Ventas" />
+                    </p:row>
+                    <p:row>
+                        <p:column headerText="N&deg;" />
+                        <p:column headerText="Monto" />
+                        <p:column headerText="N&deg;" />
+                        <p:column headerText="Monto" />
+                        <p:column headerText="Ventas" />
+                        <p:column headerText="Monto" />
+                        <p:column headerText="%" />
+                    </p:row>
+                    
+                </p:columnGroup>
+ 
+                <p:column>
+                    <f:facet name="header">VENDEDOR</f:facet>
+                    <h:outputText value="#{item.vendedor}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">AL CONTADO</f:facet>
+                    <h:outputText value="#{item.numContado}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">MONTO VENTAS CONTADO</f:facet>
+                    <h:outputText value="#{item.montoContado}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">AL CREDITO</f:facet>
+                    <h:outputText value="#{item.numCredito}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">MONTO VENTAS CREDITO</f:facet>
+                    <h:outputText value="#{item.montoCredito}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">TOTAL VENTAS</f:facet>
+                    <h:outputText value="#{item.totalVenta}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">MONTO TOTAL</f:facet>
+                    <h:outputText value="#{item.montoTotal}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">PORCENTAJE</f:facet>
+                    <h:outputText value="#{item.porcentaje*100}" />
+                </p:column>
+                <p:columnGroup type="footer">
+                    <p:row>
+                        <p:column colspan="1" style="text-align:right" footerText="TOTALES:" />
+                        <p:column footerText="#{reporte2Controller.totalVentasContado}" />
+                        <p:column footerText="$ #{reporte2Controller.mtVentasContado}" />
+                        <p:column footerText="#{reporte2Controller.totalVentasCredito}" />
+                        <p:column footerText="$ #{reporte2Controller.mtVentasCredito}" />
+                        <p:column footerText="#{reporte2Controller.totalVentas}" />
+                        <p:column footerText="$ #{reporte2Controller.mtVentas}" />
+                        <p:column footerText="100%" />
+                    </p:row>
+                </p:columnGroup>
+
+                <f:facet name="footer">
+                    Del &nbsp;&nbsp; #{funciones.formatFecha(reporte2Controller.fechaInicio)} &nbsp;&nbsp;  Al &nbsp;&nbsp;  #{funciones.formatFecha(reporte2Controller.fechaFin)} 
+                </f:facet>
+            </p:dataTable>
+                </h:form>
+            
+        </ui:define>
+        
+        
+    </ui:composition>
+</html>
+

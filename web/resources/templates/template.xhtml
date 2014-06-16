@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="shortcut icon" href="../../resources/iconos/Karol.ico"  type="image/icon" />
+        <title> <ui:insert name="title">KAROLSIG</ui:insert> </title>
+        <h:outputStylesheet library="css" name="estilos.css"/>
+        <h:outputScript library="scripts" name="script.js"/>
+        
+    </h:head>
+
+    
+    
+    <h:body> 
+        <!--CONTENEDOR PRINCIPAL -->
+        <p:layout fullPage="true" >
+
+              
+                <c:choose>
+                                  
+                <!-- SI YA ESTA LOGEADO -->
+                <c:when test="${usuarioController.login == true and usuarioController.usuario != null}" >
+                    <!-- MENU PRINCIPAL -->
+                    <p:layoutUnit id="menu"  position="west" size="170" header="MENU PRINCIPAL"  >
+                        
+                        <h:form id="frmMenu"   >
+                            <p:tieredMenu autoDisplay="false" >  
+                               <p:menuitem value="HOME" icon="ui-icon-home" url="#{bundle.url_home}" style="margin-top: 10px;" /> 
+                               
+                               <p:submenu label="REPORTES TACTICOS" icon="ui-icon-document"  style="margin-top: 10px;"  >  
+                                   <p:menuitem value="#{bundle.reporte_1}" url="#{bundle.url_reporte_1}" />
+                                   <p:menuitem value="#{bundle.reporte_2}"  url="#{bundle.url_reporte_2}" />
+                                   <p:menuitem value="#{bundle.reporte_3}"  url="#{bundle.url_reporte_3}" />
+                                   <p:menuitem value="#{bundle.reporte_4}"  url="#{bundle.url_reporte_4}" />
+                                   <p:menuitem value="#{bundle.reporte_5}"  url="#{bundle.url_reporte_5}" />
+                                   <p:menuitem value="#{bundle.reporte_6}"  url="#{bundle.url_reporte_6}" />
+                               </p:submenu> 
+                               
+                               <p:submenu label="REPORTES EXTRATEGICOS" icon="ui-icon-tag"  style="margin-top: 10px;"  >  
+                                   <p:menuitem value="#{bundle.reporte_7}" url="#{bundle.url_reporte_7}" />  
+                                   <p:menuitem value="#{bundle.reporte_8}" url="#{bundle.url_reporte_8}" />
+                                   <p:menuitem value="#{bundle.reporte_9}" url="#{bundle.url_reporte_9}" />
+                                   <p:menuitem value="#{bundle.reporte_10}" url="#{bundle.url_reporte_10}" />
+                                   <p:menuitem value="#{bundle.reporte_11}" url="#{bundle.url_reporte_11}" />
+                               </p:submenu> 
+                               
+                               <p:submenu label="ADMINISTRAR" icon="ui-icon-wrench"  style="margin-top: 10px;"  >  
+                                   <p:menuitem value="USUARIOS" url="#{bundle.url_usuarios}" />  
+                                   <p:menuitem value="PERMISOS" url="#{bundle.url_permisos}"/>  
+                               </p:submenu> 
+                               
+                               <p:submenu label="CUENTA" icon="ui-icon-person"  style="margin-top: 10px;"  >  
+                                   <p:menuitem value="MI CUENTA" icon="ico-user" url="#{bundle.url_cuenta}" />  
+                                   <p:menuitem value="CERRAR SESION" actionListener="#{usuarioController.logout}" icon="ico-logout" />  
+                               </p:submenu>
+
+                               <p:submenu label="AYUDA" icon="ui-icon-help"  style="margin-top: 10px;"  >  
+                                   <p:menuitem value="MANUAL" /> 
+                               </p:submenu>
+                           </p:tieredMenu> 
+                        </h:form>
+
+                        <p:graphicImage url="/faces/resources/images/logoKarol.jpg" width="150" style="margin-top: 40px; margin-left: 8px;" />
+                    </p:layoutUnit>
+
+                    <!-- CONTENIDO DE LA PAGINA -->
+                    <p:layoutUnit position="center" style="overflow-y: auto;" >
+                        <!-- MENSAJES -->
+                        <p:growl id="msg" life="5000"/>
+                        
+                        <ui:insert name="contenido"  />
+                         
+                    </p:layoutUnit>
+                </c:when>
+                
+                
+                <!-- SI NO ESTA LOGEADO -->
+                <c:otherwise>
+                    <p:layoutUnit position="center">
+                           <h:form>
+                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div style="min-height: 300px; text-align: center">
+                                    <p:graphicImage library="images" name="expired.jpg" alt="SESION EXPIRADA" />
+                                    <p style="font-size: 20px;" > SU SESION HA EXPERIDO .... VUELVA A LOGEARSE </p>
+                                    <br/><br/>
+                                    <p:commandButton value="Autentificarse" action="#{usuarioController.logout}"  />
+                                </div>
+                            </h:form>
+                    </p:layoutUnit>
+                    
+                </c:otherwise>
+                
+                </c:choose>
+
+                <!-- PIE DE PAGINA -->
+                <p:layoutUnit position="south" size="25" >
+                    <div align="center" >
+                        <p:outputLabel value="#{bundle.AplicationName} - IMPORTADORA KAROL S.A DE C.V" style="text-align: center; font-size: 16px;" />
+                    </div>
+                </p:layoutUnit>
+
+       </p:layout>
+                    
+            
+   </h:body>
+</html>
