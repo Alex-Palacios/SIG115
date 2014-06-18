@@ -183,16 +183,16 @@ public class JsfUtil {
     }
     
     //Formatea la fecha a dd/MM/yyyy para poder visualizarse
-    public static Date setFechaFormateadaBD(Date fecha) {
+    public static Date convertToFecha(String fecha) {
+        Date F = new Date();
         try {
             //Convierte el String en tipo Date
-            String F = setFechaFormateada(fecha,2);
             //Cambia el Formato de dd/MM/yyyy a yyyy-MM-dd para la BD
             DateFormat dfMysql = new SimpleDateFormat("yyyy-MM-dd");
-            fecha = dfMysql.parse(F);
+            F = dfMysql.parse(fecha);
         } catch (ParseException ex) { }
         
-        return fecha;
+        return F;
     }
     
     public static float redondearMenos(float valor,int precision) {

@@ -145,7 +145,7 @@ public class VentaFacade extends AbstractFacade<Venta> {
             if(!consulta.isEmpty()){
                 for(Object[] actual : consulta){
                     Facturadas item = new Facturadas();
-                    item.setDia(new Date(actual[0].toString()));
+                    item.setDia(JsfUtil.convertToFecha(actual[0].toString()));
                     item.setNumVentas(Integer.valueOf(actual[1].toString()));
                     if(actual[2] != null){
                         item.setMontoVentas(BigDecimal.valueOf(Double.valueOf(actual[2].toString())));
@@ -170,7 +170,7 @@ public class VentaFacade extends AbstractFacade<Venta> {
             return reporte;   
         }catch(Exception e){
             JsfUtil.addErrorMessage(e,"ERROR AL CONSULTAR REPORTE 4");
-            return reporte;
+            return null;
         }
     }
     

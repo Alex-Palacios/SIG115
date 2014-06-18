@@ -35,7 +35,7 @@
              </p:fieldset>
             
             <p:dataTable id="reporte4" value="#{reporte4Controller.itemsFNF}" filteredValue="#{reporte4Controller.filtroFNF}" 
-                         var="item" emptyMessage="NO HAY DATOS" style="text-align: center;" >
+                         var="item" emptyMessage="NO HAY DATOS" scrollable="true" scrollHeight="350" style="text-align: center;" >
                 <f:facet name="header"> #{bundle.reporte_4} </f:facet>
  
                 <p:columnGroup type="header">
@@ -60,7 +60,7 @@
  
                 <p:column>
                     <f:facet name="header">DIA</f:facet>
-                    <h:outputText value="#{item.dia}" />
+                    <h:outputText value="#{funciones.formatFecha(item.dia)}" />
                 </p:column>
                 <p:column>
                     <f:facet name="header">VENTAS</f:facet>
