@@ -1,7 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
     
     
     <ui:composition template="/resources/templates/template.xhtml">
@@ -10,7 +13,105 @@
         <ui:define name="title">TACTICO</ui:define>
         
         <ui:define name="contenido">
-            REPORTE #3
+            REPORTE #3 <br/><br/>
+            <h:form>
+                <p:outputLabel value="MES:" /><p:selectOneMenu value="#{reporte3Controller.mes}" editable="false" style="margin-bottom: -5px;">
+                                                    <f:selectItem itemValue="1" itemLabel="ENERO"/>
+                                                    <f:selectItem itemValue="2" itemLabel="FEBRERO"/>
+                                                    <f:selectItem itemValue="3" itemLabel="MARZO"/>
+                                                    <f:selectItem itemValue="5" itemLabel="MAYO"/>
+                                                    <f:selectItem itemValue="6" itemLabel="JUNIO"/>
+                                                    <f:selectItem itemValue="7" itemLabel="JULIO"/>
+                                                    <f:selectItem itemValue="8" itemLabel="AGOSTO"/>
+                                                    <f:selectItem itemValue="9" itemLabel="SEPTIEMPRE"/>
+                                                    <f:selectItem itemValue="10" itemLabel="OCTUBRE"/>
+                                                    <f:selectItem itemValue="11" itemLabel="NOVIEMBRE"/>
+                                                    <f:selectItem itemValue="12" itemLabel="DICIEMBRE"/>
+                                              </p:selectOneMenu>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                
+                <p:outputLabel value="A&Ntilde;O:" /><p:selectOneMenu value="#{reporte3Controller.anio}" editable="false" style="margin-bottom: -5px;">
+                                                                <f:selectItems  value="#{funciones.anios(5)}"  />
+                                                    </p:selectOneMenu>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p:commandButton value="GENERAR REPORTE" actionListener="#{reporte3Controller.generarReporte3}" update=":msg,reporte3" />
+            <br/><br/>
+            <p:fieldset style="text-align: right">
+                    <h:commandLink> 
+                       <p:graphicImage library="iconos" name="excel.png" title="Exportar a Excel" />  
+                       <p:dataExporter type="xls" target="reporte3" fileName="Comisiones_Vendedores"  />  
+                    </h:commandLink> 
+                    <h:commandLink>  
+                       <p:graphicImage library="iconos" name="pdf.png" title="Exportar en PDF"/>  
+                       <p:dataExporter type="pdf" target="reporte3" fileName="Comisiones_Vendedores" />  
+                    </h:commandLink>
+             </p:fieldset>
+            
+            <p:dataTable id="reporte3" value="#{reporte3Controller.itemsComisiones}" filteredValue="#{reporte3Controller.filtroComisiones}" 
+                         var="item" emptyMessage="NO HAY DATOS" style="text-align: center;" >
+                <f:facet name="header"> #{bundle.reporte_3} </f:facet>
+ 
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column rowspan="3" headerText="Vendedor" />
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="3" headerText="INFORMACION DE PAGOS" />
+                        <p:column colspan="2" headerText="INFORMACION DE COMISION" />
+                    </p:row>
+                    <p:row>
+                        <p:column headerText="MONTO PAGOS" />
+                        <p:column headerText="DESCUENTOS" />
+                        <p:column headerText="ABONOS" />
+                        <p:column headerText="% DE COMISION" />
+                        <p:column headerText="COMISION" />
+                    </p:row>
+                    
+                </p:columnGroup>
+ 
+                
+                <p:column>
+                    <f:facet name="header">VENDEDOR</f:facet>
+                    <h:outputText value="#{item.vendedor}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">MONTO PAGOS</f:facet>
+                    <h:outputText value="#{item.pagos}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">DESCUENTOS</f:facet>
+                    <h:outputText value="#{item.descuentos}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">ABONOS</f:facet>
+                    <h:outputText value="#{item.abonos}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">% COMISION</f:facet>
+                    <h:outputText value="#{item.porcentaje}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">COMISION</f:facet>
+                    <h:outputText value="#{item.comision}" />
+                </p:column>
+                
+                <p:columnGroup type="footer">
+                    <p:row>
+                        <p:column colspan="1" style="text-align:right" footerText="TOTALES:" />
+                        <p:column footerText="#{reporte3Controller.totalPagos}" />
+                        <p:column footerText="$ #{reporte3Controller.totalDescuentos}" />
+                        <p:column footerText="#{reporte3Controller.totalAbonos}" />
+                        <p:column footerText="-------" />
+                        <p:column footerText="#{reporte3Controller.totalComisiones}" />
+                    </p:row>
+                </p:columnGroup>
+
+                <f:facet name="footer">
+                    COMISIONES &nbsp;&nbsp; #{funciones.nombreMes(reporte3Controller.mes)} &nbsp;&nbsp;   &nbsp;&nbsp;  #{reporte3Controller.anio} 
+                </f:facet>
+            </p:dataTable>
+                </h:form>
+            
+            
         </ui:define>
         
     </ui:composition>

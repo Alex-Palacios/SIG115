@@ -6,6 +6,7 @@ package com.beans;
 
 import com.controladores.util.JsfUtil;
 import com.entidades.Venta;
+import com.reportes.Facturadas;
 import com.reportes.VentasVendedor;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -34,7 +35,9 @@ public class VentaFacade extends AbstractFacade<Venta> {
         super(Venta.class);
     }
     
-    
+    /* FUNCION QUE GENERA EL REPORTE #3 
+     *      REPORTE DE VENTAS POR VENDEDOR ENTRE 2 FECHAS
+     */
     
     public List<VentasVendedor> reporte2(Date fechaInicio, Date fechaFin){
         List<Object[]> consulta = null;
@@ -101,6 +104,76 @@ public class VentaFacade extends AbstractFacade<Venta> {
             return reporte;
         }
     }
+    
+    
+    
+    /* FUNCION QUE GENERA EL REPORTE #4
+     *      REPORTE DE VENTAS FACTURADAS VRS NO FACTURADAS
+     */
+    
+    public List<Facturadas> reporte4(Date fechaInicio, Date fechaFin){
+        List<Object[]> consulta = null;
+        List<Facturadas> reporte = new ArrayList<Facturadas>();
+        String fi = JsfUtil.setFechaFormateada(fechaInicio,2);
+        String ff = JsfUtil.setFechaFormateada(fechaFin,2);
+        try{
+            String sql ="SELECT v.FECHA_VENTA," +
+                        "	(SELECT COUNT(*) FROM venta " +
+                        "        WHERE FECHA_VENTA BETWEEN '"+fi+"' AND '"+ff+"'"  +
+                        "        AND FECHA_VENTA=v.FECHA_VENTA) AS VENTAS," +
+                        "        (SELECT SUM(MONTO_VENTA) FROM venta " +
+                        "        WHERE FECHA_VENTA BETWEEN '"+fi+"' AND '"+ff+"'"  +
+                        "        AND FECHA_VENTA=v.FECHA_VENTA) AS MONTO," +
+                        "        (SELECT COUNT(*) FROM venta " +
+                        "        WHERE FECHA_VENTA BETWEEN '"+fi+"' AND '"+ff+"'"  +
+                        "        AND TIPO_DOC=1 AND FECHA_VENTA=v.FECHA_VENTA) AS FACTURADAS," +
+                        "        (SELECT SUM(MONTO_VENTA) FROM venta " +
+                        "        WHERE FECHA_VENTA BETWEEN '"+fi+"' AND '"+ff+"'"  +
+                        "        AND TIPO_DOC=1 AND FECHA_VENTA=v.FECHA_VENTA) AS MONTO_FACT," +
+                        "        (SELECT COUNT(*) FROM venta " +
+                        "        WHERE FECHA_VENTA BETWEEN '"+fi+"' AND '"+ff+"'"  +
+                        "        AND TIPO_DOC=2 AND FECHA_VENTA=v.FECHA_VENTA) AS NO_FACT," +
+                        "        (SELECT SUM(MONTO_VENTA) FROM venta " +
+                        "        WHERE FECHA_VENTA BETWEEN '"+fi+"' AND '"+ff+"'"  +
+                        "        AND TIPO_DOC=2 AND FECHA_VENTA=v.FECHA_VENTA) AS MONTO_NO_FACT " +
+                        "FROM venta v " +
+                        "WHERE v.FECHA_VENTA BETWEEN '"+fi+"' AND '"+ff+"'"  +
+                        "GROUP BY v.FECHA_VENTA";
+            
+            Query query = em.createNativeQuery(sql);
+            consulta = query.getResultList();
+            if(!consulta.isEmpty()){
+                for(Object[] actual : consulta){
+                    Facturadas item = new Facturadas();
+                    item.setDia(new Date(actual[0].toString()));
+                    item.setNumVentas(Integer.valueOf(actual[1].toString()));
+                    if(actual[2] != null){
+                        item.setMontoVentas(BigDecimal.valueOf(Double.valueOf(actual[2].toString())));
+                    }else{
+                        item.setMontoVentas(BigDecimal.ZERO);
+                    }
+                    item.setFacturadas(Integer.valueOf(actual[3].toString()));
+                    if(actual[4] != null){
+                        item.setMontoFacturadas(BigDecimal.valueOf(Double.valueOf(actual[4].toString())));
+                    }else{
+                        item.setMontoFacturadas(BigDecimal.ZERO);
+                    }
+                    item.setNoFacturadas(Integer.valueOf(actual[5].toString()));
+                    if(actual[6] != null){
+                        item.setMontoNoFacturadas(BigDecimal.valueOf(Double.valueOf(actual[6].toString())));
+                    }else{
+                        item.setMontoNoFacturadas(BigDecimal.ZERO);
+                    }
+                    reporte.add(item);
+                }
+            }
+            return reporte;   
+        }catch(Exception e){
+            JsfUtil.addErrorMessage(e,"ERROR AL CONSULTAR REPORTE 4");
+            return reporte;
+        }
+    }
+    
     
     
 }

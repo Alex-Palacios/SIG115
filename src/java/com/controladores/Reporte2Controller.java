@@ -1,6 +1,5 @@
 package com.controladores;
 
-import com.entidades.Venta;
 import com.beans.VentaFacade;
 import com.controladores.util.JsfUtil;
 import com.reportes.VentasVendedor;
@@ -16,6 +15,8 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
@@ -25,11 +26,10 @@ public class Reporte2Controller implements Serializable {
 
     //VARIABLES CONTROLADORAS
     @EJB
-    private VentaFacade jpaVentas = null;
+    private VentaFacade jpaVentas;
     private List<VentasVendedor> itemsVV = new ArrayList<VentasVendedor>();
     private List<VentasVendedor> filtroVV = new ArrayList<VentasVendedor>();
-    private Venta selected;
-    private Venta newItem;
+    
     
     //VARIABLES
     private Date fechaInicio;
@@ -52,17 +52,6 @@ public class Reporte2Controller implements Serializable {
         return jpaVentas;
     }
         
-    public Venta getSelected() {
-        if (selected == null) {
-            selected = new Venta();
-        }
-        return selected;
-    }
-
-    public void setSelected(Venta selected) {
-        this.selected = selected;
-    }
-    
     public List<VentasVendedor> getItemsVV() {
         return itemsVV;
     }
@@ -79,14 +68,6 @@ public class Reporte2Controller implements Serializable {
         this.filtroVV = filtroVV;
     }
     
-    
-    public Venta getNewItem() {
-        return newItem;
-    }
-
-    public void setNewItem(Venta newItem) {
-        this.newItem = newItem;
-    }
 
     public Date getFechaInicio() {
         return fechaInicio;
@@ -159,9 +140,11 @@ public class Reporte2Controller implements Serializable {
         if(fechaInicio != null && fechaFin != null){
             if(fechaInicio.before(fechaFin) || fechaInicio.equals(fechaFin)){
                 //Generar Reporte
-                itemsVV = getJpaVentas().reporte2(fechaInicio, fechaFin);
-                setFiltroVV(itemsVV);
-                JsfUtil.addSuccessMessage("Reporte Generado Correctamente");
+                try{
+                    itemsVV = getJpaVentas().reporte2(fechaInicio, fechaFin);
+                    setFiltroVV(itemsVV);
+                    JsfUtil.addSuccessMessage("Reporte Generado Correctamente");
+                }catch(Exception ex){ }
             }else{
                 JsfUtil.addErrorMessage("Fecha Fin debe ser mayor o igual a Fecha Inicio");
             }
@@ -172,14 +155,16 @@ public class Reporte2Controller implements Serializable {
     
     
     public void preProcessXLS(Object document) throws IOException{  
-        File archivo=new File("/resources/templates/reporte2.xls");
+        //LEER PLANTILLA
+        File archivo=new File(JsfUtil.realPath()+"/resources/templates/reporte2.xls");
         FileInputStream file = new FileInputStream(archivo);
-        HSSFWorkbook workbook = new HSSFWorkbook(file);
-        HSSFWorkbook wb = (HSSFWorkbook) document; 
-        wb = workbook;
-        HSSFSheet sheet = workbook.getSheetAt(11);
-        sheet.setActive(true);
-
+        HSSFWorkbook libro = new HSSFWorkbook(file);
+        HSSFSheet hoja = libro.cloneSheet(0); // COPIAR PRIMERA HOJA
+        //MODIFICAR DOCUMENTO
+        HSSFWorkbook workbook = (HSSFWorkbook) document;
+        HSSFSheet sheet = workbook.getSheetAt(0);
+        HSSFRow fila = sheet.getRow(11);
+        HSSFCell celda = fila.getCell(0);
+        
    }
-    
 }

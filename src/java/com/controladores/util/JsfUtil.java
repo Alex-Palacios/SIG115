@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -156,6 +158,12 @@ public class JsfUtil {
         return calendario.getTime();
     }
     
+    public static Calendar getCalendar() {
+        TimeZone tz = getTimeZone();
+        Calendar calendario = Calendar.getInstance();
+        calendario.setTimeZone(tz);
+        return calendario;
+    }
     //Formatea la fecha a dd/MM/yyyy para poder visualizarse
     public static String setFechaFormateada(Date fecha,int format) {
         if (fecha != null) {
@@ -217,4 +225,28 @@ public class JsfUtil {
             cell.setCellStyle(cellStyle); 
         }  
    }
+    
+    public static String pathContext(){
+        ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+        return servletContext.getContextPath();
+    }
+    
+    public static String realPath(){
+        ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+        return servletContext.getRealPath("");
+    }
+    
+    public static List<Integer> ultimosAnios(int rango) {
+        List<Integer> anios = new ArrayList<Integer>();
+        if(rango >= 0){
+            Integer actual = getCalendar().get(Calendar.YEAR);
+            for(int i=0; i < 5; i++){
+                anios.add(actual - i);
+            }
+        }
+        return anios;
+    }
+    
+    
+    
 }

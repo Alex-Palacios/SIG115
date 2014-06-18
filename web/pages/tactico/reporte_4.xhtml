@@ -1,7 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
     
     
     <ui:composition template="/resources/templates/template.xhtml">
@@ -10,7 +13,100 @@
         <ui:define name="title">TACTICO</ui:define>
         
         <ui:define name="contenido">
-            REPORTE #4
+            REPORTE #4<br/><br/>
+            <h:form>
+                <p:outputLabel value="Del:" /><p:calendar value="#{reporte4Controller.fechaInicio}"  mode="popup" showOn="button" readonlyInput="true" effect="slideDown" 
+                                                          pattern="dd/MM/yyyy" required="true" requiredMessage="Ingrese Fecha Inicio" navigator="true" />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                
+                <p:outputLabel value="Al:" /><p:calendar value="#{reporte4Controller.fechaFin}"  mode="popup" showOn="button" readonlyInput="true" effect="slideDown" 
+                                                          pattern="dd/MM/yyyy" required="true" requiredMessage="Ingrese Fecha Fin" navigator="true" />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p:commandButton value="GENERAR REPORTE" actionListener="#{reporte4Controller.generarReporte4}" update=":msg,reporte4" />
+            <br/><br/>
+            <p:fieldset style="text-align: right">
+                    <h:commandLink> 
+                       <p:graphicImage library="iconos" name="excel.png" title="Exportar a Excel" />  
+                       <p:dataExporter type="xls" target="reporte4" fileName="Facturadas_No_Facturadas"/>  
+                    </h:commandLink> 
+                    <h:commandLink>  
+                       <p:graphicImage library="iconos" name="pdf.png" title="Exportar en PDF"/>  
+                       <p:dataExporter type="pdf" target="reporte4" fileName="Facturadas_No_Facturadas" />  
+                    </h:commandLink>
+             </p:fieldset>
+            
+            <p:dataTable id="reporte4" value="#{reporte4Controller.itemsFNF}" filteredValue="#{reporte4Controller.filtroFNF}" 
+                         var="item" emptyMessage="NO HAY DATOS" style="text-align: center;" >
+                <f:facet name="header"> #{bundle.reporte_4} </f:facet>
+ 
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column rowspan="3" headerText="DIA" />
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2" headerText="VENTAS" />
+                        <p:column colspan="2" headerText="FACTURADAS" />
+                        <p:column colspan="2" headerText="NO FACTURADAS" />
+                    </p:row>
+                    <p:row>
+                        <p:column headerText="N&deg;" />
+                        <p:column headerText="Monto" />
+                        <p:column headerText="N&deg;" />
+                        <p:column headerText="Monto" />
+                        <p:column headerText="N&deg;" />
+                        <p:column headerText="N&deg;" />
+                    </p:row>
+                    
+                </p:columnGroup>
+ 
+                <p:column>
+                    <f:facet name="header">DIA</f:facet>
+                    <h:outputText value="#{item.dia}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">VENTAS</f:facet>
+                    <h:outputText value="#{item.numVentas}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">MONTO VENTAS</f:facet>
+                    <h:outputText value="#{item.montoVentas}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">FACTURADAS</f:facet>
+                    <h:outputText value="#{item.facturadas}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">MONTO VENTAS FACTURADAS</f:facet>
+                    <h:outputText value="#{item.montoFacturadas}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">NO FACTURADAS</f:facet>
+                    <h:outputText value="#{item.noFacturadas}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">MONTO VENTAS NO FACTURADAS</f:facet>
+                    <h:outputText value="#{item.montoNoFacturadas}" />
+                </p:column>
+                
+                
+                
+                <p:columnGroup type="footer">
+                    <p:row>
+                        <p:column colspan="1" style="text-align:right" footerText="TOTALES:" />
+                        <p:column footerText="#{reporte4Controller.totalVentas}" />
+                        <p:column footerText="$ #{reporte4Controller.mtVentas}" />
+                        <p:column footerText="#{reporte4Controller.totalVentasFacturadas}" />
+                        <p:column footerText="$ #{reporte4Controller.mtVentasFacturadas}" />
+                        <p:column footerText="#{reporte4Controller.totalVentasNoFacturadas}" />
+                        <p:column footerText="$ #{reporte4Controller.mtVentasNoFacturadas}" />
+                    </p:row>
+                </p:columnGroup>
+
+                <f:facet name="footer">
+                    Del &nbsp;&nbsp; #{funciones.formatFecha(reporte4Controller.fechaInicio)} &nbsp;&nbsp;  Al &nbsp;&nbsp;  #{funciones.formatFecha(reporte4Controller.fechaFin)} 
+                </f:facet>
+            </p:dataTable>
+                </h:form>
+            
         </ui:define>
         
     </ui:composition>
