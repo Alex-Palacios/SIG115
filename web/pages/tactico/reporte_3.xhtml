@@ -47,7 +47,7 @@
              </p:fieldset>
             
             <p:dataTable id="reporte3" value="#{reporte3Controller.itemsComisiones}" filteredValue="#{reporte3Controller.filtroComisiones}" 
-                         var="item" emptyMessage="NO HAY DATOS" style="text-align: center;" >
+                         var="item" emptyMessage="NO HAY DATOS" scrollable="true" scrollHeight="350" style="text-align: center;" >
                 <f:facet name="header"> #{bundle.reporte_3} </f:facet>
  
                 <p:columnGroup type="header">

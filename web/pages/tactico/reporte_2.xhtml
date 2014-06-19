@@ -35,7 +35,7 @@
              </p:fieldset>
             
             <p:dataTable id="reporte2" value="#{reporte2Controller.itemsVV}" filteredValue="#{reporte2Controller.filtroVV}" 
-                         var="item" emptyMessage="NO HAY DATOS" style="text-align: center;" >
+                         var="item" emptyMessage="NO HAY DATOS" scrollable="true" scrollHeight="350" style="text-align: center;" >
                 <f:facet name="header"> #{bundle.reporte_2} </f:facet>
  
                 <p:columnGroup type="header">
@@ -91,6 +91,8 @@
                     <f:facet name="header">PORCENTAJE</f:facet>
                     <h:outputText value="#{item.porcentaje*100}" />
                 </p:column>
+                
+                
                 <p:columnGroup type="footer">
                     <p:row>
                         <p:column colspan="1" style="text-align:right" footerText="TOTALES:" />

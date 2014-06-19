@@ -141,7 +141,7 @@ public class Reporte2Controller implements Serializable {
             if(fechaInicio.before(fechaFin) || fechaInicio.equals(fechaFin)){
                 //Generar Reporte
                 try{
-                    itemsVV = getJpaVentas().reporte2(fechaInicio, fechaFin);
+                    itemsVV = jpaVentas.reporte2(fechaInicio, fechaFin);
                     setFiltroVV(itemsVV);
                     JsfUtil.addSuccessMessage("Reporte Generado Correctamente");
                 }catch(Exception ex){ }
